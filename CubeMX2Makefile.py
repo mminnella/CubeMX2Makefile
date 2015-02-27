@@ -139,6 +139,11 @@ for node in nodes:
     value = node.attrib.get('value')
     if (value != ""):
         value = re.sub(r'^..(\\|/)..(\\|/)..(\\|/)', '', value)
+	
+	#POSIX PATH FIX
+	if (os.name ==  "posix"):
+                value = value.replace("\\","/")
+	
         if first:
             c_includes = 'C_INCLUDES = -I' + value
             first = 0
@@ -158,6 +163,11 @@ estack = ''
 node = root.find('.//tool[@superClass="com.atollic.truestudio.exe.debug.toolchain.ld"]/option[@superClass="com.atollic.truestudio.ld.general.scriptfile"]')
 try:
     value = node.attrib.get('value')
+
+    #POSIX PATH FIX
+    if (os.name == "posix"):
+	value = value.replace("..\\","/")
+
     ld_script = proj_folder + os.path.sep + 'TrueSTUDIO' + os.path.sep + proj_name + ' Configuration' + os.path.sep + os.path.basename(value)
     fd = open(ld_script, 'r')
     ls = fd.read()
